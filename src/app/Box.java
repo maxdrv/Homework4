@@ -75,7 +75,7 @@ public class Box{
 
 
     /**
-     * 3) Создание двух функций для конвертации из евро в рубли и наоборот
+     * 3) Конвертация в другие валюты
      *
      */
     Function<CurrencyEnum, Double> test = currencyEnum -> this.getPrice() / currencyEnum.getCurrencyValue();
