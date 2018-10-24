@@ -4,6 +4,7 @@ import app.sweets.Sweet;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,8 +13,8 @@ import static java.util.stream.Collectors.counting;
 
 public class Box{
 
-    private String value;
-    final private static double EURO = 75.11;
+    CurrencyEnum currentCurrency;
+
     private double price;
     private double weight;
     private ArrayList<Sweet> sweetsList;
@@ -22,7 +23,11 @@ public class Box{
         this.price = 0;
         this.weight = 0;
         this.sweetsList = new ArrayList<>();
-        this.value = "Rub";
+        this.currentCurrency = CurrencyEnum.RU;
+    }
+
+    public double getPrice() {
+        return price;
     }
 
     /**
@@ -41,22 +46,14 @@ public class Box{
     public void add(Sweet sweet) {
         if (predicate.test(sweet)) {
             sweetsList.add(sweet);
-            if (this.value == "Euro") {
-                this.price += sweet.getPrice() / EURO;
-            } else {
-                this.price += sweet.getPrice();
-            }
+            this.price += sweet.getPrice();
             this.weight += sweet.getWeight();
         }
     }
 
     public void remove(Sweet sweet) {
         if (sweetsList.remove(sweet)) {
-            if (this.value == "Euro") {
-                this.price -= sweet.getPrice() / EURO;
-            } else {
-                this.price -= sweet.getPrice();
-            }
+            this.price -= sweet.getPrice();
             this.weight -= sweet.getWeight();
         }
     }
@@ -73,15 +70,22 @@ public class Box{
     }
 
     public void getInfoSimple() {
-        System.out.format("Вес коробки: %.3f. Стоимость коробки: %.2f %s\n", weight, price, value);
+        System.out.format("Вес коробки: %.3f. Стоимость коробки: %.2f %s\n", weight, price, currentCurrency);
     }
 
 
     /**
-     *  3) Создание двух функций для конвертации из евро в рубли и наоборот
-     *      одна в видее лямбда выражения
-     *      другая в виде анонимного класса
+     * 3) Создание двух функций для конвертации из евро в рубли и наоборот
+     *
      */
+    Function<CurrencyEnum, Double> test = currencyEnum -> this.getPrice() / currencyEnum.getCurrencyValue();
+
+    public void convert(CurrencyEnum currencyEnum) {
+        System.out.format("Коробка сладостей стоит: %.2f %s\n", test.apply(currencyEnum), currencyEnum);
+    }
+
+/*
+
     CostCalculator toRubles = new CostCalculator() {
         @Override
         public Double convert(Double cost) {
@@ -94,21 +98,22 @@ public class Box{
     public void convertValue(String value) {
         switch (value) {
             case "Rub":
-                if (this.value != "Rub") {
+                if (this.currentCurrency != "Rub") {
                     this.price = toRubles.convert(this.price);
-                    this.value = "Rub";
+                    this.currentCurrency = "Rub";
                 }
                 break;
 
             case "Euro":
-                if(this.value != "Euro"){
+                if(this.currentCurrency != "Euro"){
                     this.price = toEuro.convert(this.price);
-                    this.value = "Euro";
+                    this.currentCurrency = "Euro";
                 }
                 break;
             default: break;
         }
     }
+*/
 
     /**
      *  4)  Методы с использованием Stream API

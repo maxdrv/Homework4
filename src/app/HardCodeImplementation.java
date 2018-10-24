@@ -2,6 +2,7 @@ package app;
 
 import app.sweets.*;
 
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class HardCodeImplementation {
@@ -70,17 +71,13 @@ public class HardCodeImplementation {
         // выводим инофрмацию
         box.getInfo();
 
+
         // 3)   CostCalculator для коробочки
         System.out.println("**********Часть 3*********");
-        System.out.println("-----Вызов метода конвертора валют и инфо");
-        box.convertValue("Euro");
-        box.getInfoSimple();
-        System.out.println("-----Добавляем дополнительную сладость в коробку и выводим инфо");
-        box.add(candy);
-        box.getInfoSimple();
-        System.out.println("-----Вызов метода конвертора валют и инфо");
-        box.convertValue("Rub");
-        box.getInfoSimple();
+        box.convert(CurrencyEnum.CANDY);
+        box.convert(CurrencyEnum.JELLYBEAN);
+        box.convert(CurrencyEnum.EURO);
+        box.convert(CurrencyEnum.RU);
 
         // 4)   Методы использующие Stream API
         // вывести названия классов всех сладостей в коробке
